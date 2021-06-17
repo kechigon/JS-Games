@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Minesweeper</title>
+  <script>
+    let cellValue = new Array(64);
+    for (i = 0; i < 64; i++) {
+      cellValue[i] = 0;
+    }
+
+    let cellIsOpen = new Array(64);
+    for (i = 0; i < 64; i++){
+      cellIsOpen[i] = false;
+    }
+
+    let mineNum = 10;
+
+    let fBtnIsOn = false;
+
+    let firstCellOpen = true;
+
+    let gameIsOver = false;
+
+    let openCells = 0;
+
+    window.onload = function (){
+      document.getElementById("message").innerHTML = "Let's remove the mines";
+    };
+
+    function openCell(idOfcell){
+
+      let elm = document.getElementById(idOfcell);
+
+      let cellNum = Number(idOfcell.substr(4));
+
+      if (gameIsOver || cellIsOpen[cellNum]){
+        return;
+      }
+
+      let message = document.getElementById("message");
+
+      if (fBtnIsOn){
+
+        if (elm.innerHTML == "") {
+          elm.innerHTML = "▲";
+        } else if (elm.innerHTML == "▲") {
+          elm.innerHTML = "";
+        }
+      } else {
+
+        if (elm.innerHTML != "▲") {
+
+          if (firstCellOpen){
+
+            cellValue[cellNum] = 2;
+
+            if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 &&
+              cellNum != 48 && cellNum != 56){
+              cellValue[cellNum - 1] = 2;
+              if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 &&
+                cellNum != 6 && cellNum != 7){
+                cellValue[cellNum - 9] = 2;
+              }
+            }
+
+            if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 &&
+              cellNum != 6 && cellNum != 7) {
+              cellValue[cellNum - 8] = 2;
+              if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+                cellNum != 55 && cellNum != 63){
+                cellValue[cellNum - 7] = 2;
+              }
+            }
+
+            if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+              cellNum != 55 && cellNum != 63){
+              cellValue[cellNum + 1] = 2;
+              if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+                cellNum != 62 && cellNum != 63){
+                cellValue[cellNum + 9] = 2;
+              }
+            }
+
+            if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+              cellNum != 62 && cellNum != 63) {
+              cellValue[cellNum + 8] = 2;
+              if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 &&
+                cellNum != 48 && cellNum != 56) {
+                cellValue[cellNum + 7] = 2;
+              }
+            }
+
+            placeMine();
+
+            openNomalCell(cellNum);
+          } else {
+
+            if (cellValue[cellNum] == 1){
+
+              document.getElementById("stepMineSound").play();
+
+              viewAllMines(0);
+
+              message.innerHTML = "game over";
+
+              gameIsOver = true;
+            } else {
+
+              openNomalCell(cellNum);
+
+              if (openCells == 54) {
+
+                document.getElementById("clearSound").play();
+
+                viewAllMines(1);
+
+                message.innerHTML = "clear!!";
+
+                gameIsOver = true;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function placeMine() {
+
+      let mines = 0;
+
+      while (mines < mineNum){
+
+        let randomCoordinate = Math.floor(Math.random() * 64);
+
+        if (cellValue[randomCoordinate] == 0) {
+
+          cellValue[randomCoordinate] = 1;
+
+          mines++;
+        }
+      }
+    }
+
+    function onfBtnIsPressed(){
+
+      document.getElementById("flagButtonClickSound").play();
+
+      fBtnIsOn = !fBtnIsOn;
+    }
+
+    function viewAllMines(cleared) {
+
+      for (i = 0; i < 64; i++) {
+        if (cellValue[i] == 1){
+          let id = 'cell' + new String(i);
+          let elm = document.getElementById(id);
+          if (cleared == 1) {
+            elm.style.background = "#cccccc";
+          } else {
+            elm.style.background = "#f08080";
+          }
+          elm.innerHTML = "●";
+        }
+      }
+    }
+
+    function onResetButtonClick(){
+
+      document.getElementById("resetButtonClickSound").play();
+
+      for (i = 0; i < 64; i++){
+
+        cellValue[i] = 0;
+
+        cellIsOpen[i] = false;
+
+        let id = 'cell' + new String(i);
+        let elm = document.getElementById(id);
+        elm.innerHTML = "";
+        elm.style.background = "#ffffff";
+        elm.style.color = "#000000";
+      }
+
+      fBtnIsOn = false;
+      firstCellOpen = true;
+      gameIsOver = false;
+      openCells = 0;
+
+      document.getElementById("message").innerHTML = "Let's remove the mines";
+
+      document.getElementById("flagButton").checked = false;
+    }
+
+    function countAroundMineNum(cellNum){
+
+      let aroundCellValue = [];
+
+      if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 && cellNum !=
+        48 && cellNum != 56){
+        aroundCellValue.push(cellValue[cellNum - 1]);
+        if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 && cellNum !=
+          6 && cellNum != 7){
+          aroundCellValue.push(cellValue[cellNum - 9]);
+        }
+      }
+
+      if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 && cellNum !=
+        6 && cellNum != 7) {
+        aroundCellValue.push(cellValue[cellNum - 8]);
+        if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+          cellNum != 55 && cellNum != 63){
+          aroundCellValue.push(cellValue[cellNum - 7]);
+        }
+      }
+
+      if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+        cellNum != 55 && cellNum != 63){
+        aroundCellValue.push(cellValue[cellNum + 1]);
+        if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+          cellNum != 62 && cellNum != 63){
+          aroundCellValue.push(cellValue[cellNum + 9]);
+        }
+      }
+
+      if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+        cellNum != 62 && cellNum != 63) {
+        aroundCellValue.push(cellValue[cellNum + 8]);
+        if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 &&
+          cellNum != 48 && cellNum != 56) {
+          aroundCellValue.push(cellValue[cellNum + 7]);
+        }
+      }
+
+      let aroundMineNum = 0;
+      aroundCellValue.forEach(function (value) {
+        if (value == 1) {
+          aroundMineNum++;
+        }
+      });
+      return aroundMineNum;
+    }
+
+    function openNomalCell(cellNum){
+
+      if (!cellIsOpen[cellNum]){
+
+        let elm = document.getElementById("cell" + new String(cellNum));
+
+        elm.style.background = "#cccccc";
+
+        let aroundMineNum = countAroundMineNum(cellNum);
+
+        firstCellOpen = false;
+
+        openCells++;
+
+        cellIsOpen[cellNum] = true;
+
+        if (aroundMineNum == 0) {
+
+          if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 &&
+            cellNum != 48 && cellNum != 56){
+            openNomalCell(cellNum - 1);
+            if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 &&
+              cellNum != 6 && cellNum != 7){
+              openNomalCell(cellNum - 9);
+            }
+          }
+
+          if (cellNum != 0 && cellNum != 1 && cellNum != 2 && cellNum != 3 && cellNum != 4 && cellNum != 5 && cellNum !=
+            6 && cellNum != 7) {
+            openNomalCell(cellNum - 8);
+            if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+              cellNum != 55 && cellNum != 63){
+              openNomalCell(cellNum - 7);
+            }
+          }
+
+          if (cellNum != 7 && cellNum != 15 && cellNum != 23 && cellNum != 31 && cellNum != 39 && cellNum != 47 &&
+            cellNum != 55 && cellNum != 63){
+            openNomalCell(cellNum + 1);
+            if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+              cellNum != 62 && cellNum != 63){
+              openNomalCell(cellNum + 9);
+            }
+          }
+
+          if (cellNum != 56 && cellNum != 57 && cellNum != 58 && cellNum != 59 && cellNum != 60 && cellNum != 61 &&
+            cellNum != 62 && cellNum != 63) {
+            openNomalCell(cellNum + 8);
+            if (cellNum != 0 && cellNum != 8 && cellNum != 16 && cellNum != 24 && cellNum != 32 && cellNum != 40 &&
+              cellNum != 48 && cellNum != 56) {
+              openNomalCell(cellNum + 7);
+            }
+          }
+        } else {
+
+          switch (aroundMineNum){
+            case 1:
+              elm.style.color = "#1e90ff";
+              break;
+            case 2:
+              elm.style.color = "#228b22";
+              break;
+            case 3:
+              elm.style.color = "#ffa500";
+              break;
+            case 4:
+              elm.style.color = "#dc143c";
+              break;
+            case 5:
+              elm.style.color = "#ba55d3";
+              break;
+            case 6:
+              elm.style.color = "#48d1cc";
+              break;
+            case 7:
+              elm.style.color = "#ff69b4";
+              break;
+            case 8:
+              elm.style.color = "#000000";
+              break;
+          }
+          elm.innerHTML = new String(aroundMineNum);
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Minesweeper</h1>
+  <div id="message"></div>
+  <table id="minsweeperTable" cellspacing="1" cellpadding="0">
+    <tbody id="tbody">
+      <script>
+        let html = ''
+        let cellNumCount = 0;
+        for (i = 0; i < 8; i++){
+          html = html + '<tr>' + "\n";
+          for (j = 0; j < 8; j++) {
+            let id = 'cell' + new String(cellNumCount);
+            html = html + '<td id="' + id + '"  onclick="openCell(this.id)"></td>' + "\n";
+            cellNumCount++;
+          }
+          html = html + '</tr>' + "\n";
+        }
+        document.getElementById("tbody").innerHTML = html;
+      </script>
+    </tbody>
+  </table>
+  <p>flag</p>
+  <div class="flagButtonWrap">
+    <input type="checkbox" id="flagButton" onclick="onfBtnIsPressed()">
+  </div>
+  <a href="#" class="cp_btn" onclick="onResetButtonClick();return false;">reset</a>
+  <audio id="stepMineSound" preload="auto">
+    <source src="se/se_maoudamashii_explosion05.mp3" type="audio/mp3">
+    <source src="se/se_maoudamashii_explosion05.wav" type="audio/wav">
+  </audio>
+  <audio id="clearSound" preload="auto">
+    <source src="se/se_maoudamashii_onepoint09.mp3" type="audio/mp3">
+    <source src="se/se_maoudamashii_onepoint09.wav" type="audio/wav">
+  </audio>
+  <audio id="resetButtonClickSound" preload="auto">
+    <source src="se/se_maoudamashii_se_pc01.mp3" type="audio/mp3">
+    <source src="se/se_maoudamashii_se_pc01.wav" type="audio/wav">
+  </audio>
+  <audio id="flagButtonClickSound" preload="auto">
+    <source src="se/se_maoudamashii_system40.mp3" type="audio/mp3">
+    <source src="se/se_maoudamashii_system40.wav" type="audio/wav">
+  </audio>
+</body>
+</html>
