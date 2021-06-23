@@ -27,7 +27,6 @@
     let openCells = 0;
 
     window.onload = function (){
-      document.getElementById("message").innerHTML = "Let's remove the mines";
     };
 
     function openCell(idOfcell){
@@ -104,7 +103,7 @@
 
               viewAllMines(0);
 
-              message.innerHTML = "game over";
+              message.innerHTML = "Game over";
 
               gameIsOver = true;
             } else {
@@ -117,7 +116,7 @@
 
                 viewAllMines(1);
 
-                message.innerHTML = "clear!!";
+                message.innerHTML = "Clear!!";
 
                 gameIsOver = true;
               }
@@ -333,8 +332,8 @@
 
 <body>
   <h1>Minesweeper</h1>
-  <div id="message"></div>
-  <table id="minsweeperTable" cellspacing="1" cellpadding="0">
+  <div id="message">Let's remove the mines</div>
+  <table id="minesweeperTable" cellspacing="1" cellpadding="0">
     <tbody id="tbody">
       <script>
         let html = ''
@@ -356,7 +355,7 @@
   <div class="flagButtonWrap">
     <input type="checkbox" id="flagButton" onclick="onfBtnIsPressed()">
   </div>
-  <a href="#" class="cp_btn" onclick="onResetButtonClick();return false;">reset</a>
+  <a href="#" class="cp_btn" onclick="onResetButtonClick()">reset</a>
   <audio id="stepMineSound" preload="auto">
     <source src="se/se_maoudamashii_explosion05.mp3" type="audio/mp3">
     <source src="se/se_maoudamashii_explosion05.wav" type="audio/wav">
