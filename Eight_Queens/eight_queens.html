@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Eight Queens</title>
+	<script>
+		let is_ok = [];
+
+		for (i = 0; i < 8; i++) {
+			is_ok[i] = [];
+			for (j = 0; j < 8; j++) {
+				is_ok[i][j] = true;
+			}
+		}
+
+		let queen_num = 8;
+
+		let finish = false;
+
+		function placeQueen(idOfcell) {
+
+			if (finish) {
+				return;
+			}
+
+			let cb_cell = document.getElementById(idOfcell);
+
+			let cellRow = idOfcell.substr(14, 1);
+
+			let cellCol = idOfcell.substr(16);
+
+			let q_cell = document.getElementById("queensCell" + new String(queen_num - 1));
+
+			cb_cell.innerHTML = "♛";
+			q_cell.innerHTML = "";
+
+			if (is_ok[cellRow][cellCol]) {
+
+				queen_num--;
+
+				if (queen_num == 0) {
+					clear();
+				}
+
+				updateIs_Ok(cellRow, cellCol);
+			} else {
+
+				gameOver(cellRow, cellCol);
+			}
+		}
+
+		function updateIs_Ok(cellRow, cellCol) {
+
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < 8; j++) {
+					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
+						is_ok[i][j] = false;
+					}
+				}
+			}
+		}
+
+		function gameOver(cellRow, cellCol) {
+
+			document.getElementById("message").innerHTML = "Game over";
+
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < 8; j++) {
+					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
+						document.getElementById("chessboardCell" + new String(i) + '-' + new String(j)).style.background ="#f08080";
+					}
+				}
+			}
+
+			finish = true;
+		}
+
+		function clear() {
+
+			document.getElementById("message").innerHTML = "Clear!!";
+
+			finish = true;
+		}
+
+		function onResetButtonClick() {
+
+			document.getElementById("message").innerHTML = "Let's place the queens";
+
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < 8; j++) {
+
+					cb_cell = document.getElementById("chessboardCell" + new String(i) + '-' + new String(j));
+					cb_cell.innerHTML = "";
+					if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
+						cb_cell.style.background = "#cd853f";
+					}
+					else {
+						cb_cell.style.background = "#f5deb3";
+					}
+
+					is_ok[i][j] = true;
+				}
+				document.getElementById("queensCell" + new String(i)).innerHTML = "♛";
+			}
+
+			queen_num = 8;
+
+			finish = false;
+		}
+	</script>
+</head>
+
+<body>
+	<h1>Eight Queens</h1>
+	<div id="message">Let's place the queens</div>
+	<table cellspacing="1" cellpadding="0">
+		<tbody id="tbody-1">
+			<script>
+				let cb_html = '';
+				for (i = 0; i < 8; i++) {
+					cb_html += '<tr>' + "\n";
+					for (j = 0; j < 8; j++) {
+						let id = 'chessboardCell' + new String(i) + '-' + new String(j);
+						cb_html += '<td id="' + id + '"';
+						if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
+							cb_html += ' class="tdThick"'
+						} else {
+							cb_html += ' class="tdLight"';
+						}
+						cb_html += ' onclick="placeQueen(this.id)"></td>' + "\n";
+					}
+					cb_html += '</tr>' + "\n";
+				}
+				document.getElementById("tbody-1").innerHTML = cb_html;
+			</script>
+		</tbody>
+	</table>
+	<table cellspacing="1" cellpadding="0">
+		<tbody id="tbody-2">
+			<script>
+				let q_html = '';
+				q_html += '<tr>' + "\n";
+				for (i = 0; i < 8; i++) {
+					let id = 'queensCell' + new String(i);
+					q_html += '<td id="' + id + '" class="queens">♛</td>' + "\n";
+				}
+				q_html += '</tr>' + "\n";
+				document.getElementById("tbody-2").innerHTML = q_html;
+			</script>
+		</tbody>
+	</table>
+	<a href="#" class="cp_btn" onclick="onResetButtonClick()">reset</a>
+</body>
+
+</html>

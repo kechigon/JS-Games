@@ -1,0 +1,84 @@
+body {
+	background-color: #CCFFFF;
+}
+
+h1 {
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+#message {
+	margin-bottom: 8px;
+	text-align: center;
+	font-size: x-large;
+}
+
+table{
+	margin: 0 auto 0 auto;
+	margin-bottom: 8px;
+	padding: 0;
+	background: #000033;
+	font-size: 22px;
+}
+
+tr {
+	padding: 0;
+	margin: 0;
+}
+
+td.tdLight {
+	color: #000000;
+	background: #f5deb3;
+	padding: 0;
+	margin: 0;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	vertical-align: middle;
+	caret-color: #cccccc;
+}
+
+td.tdThick {
+	color: #000000;
+	background: #cd853f;
+	padding: 0;
+	margin: 0;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	vertical-align: middle;
+	caret-color: #cccccc;
+}
+
+td.queens {
+	color: #000000; 
+	background: #ffffff; 
+	padding: 0; 
+	margin: 0; 
+	width: 35px; 
+	height: 35px; 
+	text-align: center; 
+	vertical-align: middle;
+	caret-color: #cccccc;
+}
+
+a.cp_btn {
+	display: block;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 160px;
+	padding: 0.8em;
+	text-align: center;
+	text-decoration: none;
+	color: #FFF;
+	background: #26C6DA;
+	border-bottom: 2px solid #00838F;
+	border-radius: 4px;
+	box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 2px 2px rgba(0, 0, 0, 0.19);
+}
+
+a.cp_btn:active {
+	border-bottom: 2px solid #26C6DA;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.30);
+}
