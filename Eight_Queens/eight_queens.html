@@ -6,12 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Eight Queens</title>
 	<script>
-		let is_ok = [];
+		let chsbrd = [];
 
 		for (i = 0; i < 8; i++) {
-			is_ok[i] = [];
+			chsbrd[i] = [];
 			for (j = 0; j < 8; j++) {
-				is_ok[i][j] = true;
+				chsbrd[i][j] = 0;
 			}
 		}
 
@@ -19,7 +19,7 @@
 
 		let finish = false;
 
-		function placeQueen(idOfcell) {
+		function onChsbrdClick(idOfcell) {
 
 			if (finish) {
 				return;
@@ -31,32 +31,65 @@
 
 			let cellCol = idOfcell.substr(16);
 
-			let q_cell = document.getElementById("queensCell" + new String(queen_num - 1));
+			let q_cell;
 
-			cb_cell.innerHTML = "♛";
-			q_cell.innerHTML = "";
+			if (chsbrd[cellRow][cellCol] == 0) {
 
-			if (is_ok[cellRow][cellCol]) {
+				q_cell = document.getElementById("queensCell" + new String(queen_num - 1));
+
+				cb_cell.innerHTML = "♛";
+				q_cell.innerHTML = "";
 
 				queen_num--;
 
 				if (queen_num == 0) {
 					clear();
+					return;
 				}
 
-				updateIs_Ok(cellRow, cellCol);
+				placeQueen(cellRow, cellCol);
+			} else if(chsbrd[cellRow][cellCol] == 2) {
+
+				q_cell = document.getElementById("queensCell" + new String(queen_num));
+
+				cb_cell.innerHTML = "";
+				q_cell.innerHTML = "♛";
+
+				queen_num++;
+
+				removeQueen(cellRow, cellCol);
 			} else {
+
+				q_cell = document.getElementById("queensCell" + new String(queen_num - 1));
+
+				cb_cell.innerHTML = "♛";
+				q_cell.innerHTML = "";
 
 				gameOver(cellRow, cellCol);
 			}
 		}
 
-		function updateIs_Ok(cellRow, cellCol) {
+		function placeQueen(cellRow, cellCol) {
 
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
 					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
-						is_ok[i][j] = false;
+						if (i == cellRow && j == cellCol) {
+							chsbrd[i][j] = 2;
+						} else {
+							chsbrd[i][j] = 1;
+						}
+					}
+				}
+			}
+		}
+
+		function removeQueen(cellRow, cellCol) {
+
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < 8; j++) {
+					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
+						chsbrd[i][j] = 0;
 					}
 				}
 			}
@@ -65,6 +98,8 @@
 		function gameOver(cellRow, cellCol) {
 
 			document.getElementById("message").innerHTML = "Game over";
+
+			document.getElementById("gameOverSound").play();
 
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
@@ -81,12 +116,16 @@
 
 			document.getElementById("message").innerHTML = "Clear!!";
 
+			document.getElementById("clearSound").play();
+
 			finish = true;
 		}
 
 		function onResetButtonClick() {
 
 			document.getElementById("message").innerHTML = "Let's place the queens";
+
+			document.getElementById("resetButtonClickSound").play();
 
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
@@ -100,7 +139,7 @@
 						cb_cell.style.background = "#f5deb3";
 					}
 
-					is_ok[i][j] = true;
+					chsbrd[i][j] = 0;
 				}
 				document.getElementById("queensCell" + new String(i)).innerHTML = "♛";
 			}
@@ -129,7 +168,7 @@
 						} else {
 							cb_html += ' class="tdLight"';
 						}
-						cb_html += ' onclick="placeQueen(this.id)"></td>' + "\n";
+						cb_html += ' onclick="onChsbrdClick(this.id)"></td>' + "\n";
 					}
 					cb_html += '</tr>' + "\n";
 				}
@@ -152,6 +191,18 @@
 		</tbody>
 	</table>
 	<a href="#" class="cp_btn" onclick="onResetButtonClick()">reset</a>
+	<audio id="resetButtonClickSound" preload="auto">
+		<source src="se/se_maoudamashii_se_pc01.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_se_pc01.wav" type="audio/wav">
+	</audio>
+	<audio id="gameOverSound" preload="auto">
+		<source src="se/se_maoudamashii_onepoint33.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_onepoint33.wav" type="audio/wav">
+	</audio>
+	<audio id="clearSound" preload="auto">
+		<source src="se/se_maoudamashii_onepoint09.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_onepoint09.wav" type="audio/wav">
+	</audio>
 </body>
 
 </html>
