@@ -48,7 +48,7 @@
 				}
 
 				placeQueen(cellRow, cellCol);
-			} else if(chsbrd[cellRow][cellCol] == 2) {
+			} else if(chsbrd[cellRow][cellCol] == 10) {
 
 				q_cell = document.getElementById("queensCell" + new String(queen_num));
 
@@ -75,13 +75,14 @@
 				for (j = 0; j < 8; j++) {
 					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
 						if (i == cellRow && j == cellCol) {
-							chsbrd[i][j] = 2;
+							chsbrd[i][j] = 10;
 						} else {
-							chsbrd[i][j] = 1;
+							chsbrd[i][j]++;
 						}
 					}
 				}
 			}
+			console.log(chsbrd);
 		}
 
 		function removeQueen(cellRow, cellCol) {
@@ -89,10 +90,15 @@
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
 					if (i == cellRow || j == cellCol || i - cellRow == j - cellCol || -1 * (i - cellRow) == j - cellCol) {
-						chsbrd[i][j] = 0;
+						if (chsbrd[i][j] == 10) {
+							chsbrd[i][j] = 0;
+						} else {
+							chsbrd[i][j]--;
+						}
 					}
 				}
 			}
+			console.log(chsbrd);
 		}
 
 		function gameOver(cellRow, cellCol) {
