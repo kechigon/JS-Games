@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Hit and Blow</title>
+	<script>
+		let answer = decideAnswer();
+
+		let colors = [0, 1, 2, 3];
+
+		let turn = 0;
+
+		let finish = false;
+
+		window.onload = function() {
+			placeColors(turn);
+		}
+
+		function decideAnswer(){
+
+			let answer = [];
+
+			let i = 0;
+
+			while(i < 4){
+				let color = Math.floor(Math.random() * 6);
+
+				if(answer.includes(color)){
+					continue;
+				}
+
+				answer[i] = color;
+
+				i++;
+			}
+			return answer;
+		}
+
+		function numToColor(num){
+			switch(num){
+				case 0:
+					return "#1e90ff";
+					break;
+				case 1:
+					return "#ff4500";
+					break;
+				case 2:
+					return "#228b22";
+					break;
+				case 3:
+					return "#ffd700";
+					break;
+				case 4:
+					return "#ff69b4";
+					break;
+				case 5:
+					return "#ffffff";
+					break;
+			}
+		}
+
+		function placeColors(turn){
+
+			for(i = 0; i < 4; i++){
+				document.getElementById("sc" + new String(turn) + '-' + new String(i)).style.background = numToColor(colors[i]);
+			}
+		}
+
+		function onColorButtonClick(idOfColor){
+
+			if(finish){
+				return;
+			}
+
+			let elm = document.getElementById(idOfColor);
+
+			let color_turn = idOfColor.substr(2, 1);
+
+			let color_num = idOfColor.substr(4);
+
+			if(color_turn != turn){
+				return;
+			}
+
+			if(colors[color_num] == 5){
+				colors[color_num] = 0;
+			}
+			else {
+				colors[color_num]++;
+			}
+
+			elm.style.background = numToColor(colors[color_num]);
+		}
+
+		function onOkButtonClick(idOfOk){
+
+			if(finish){
+				return;
+			}
+
+			let ok_num = idOfOk.substr(8);
+
+			if(ok_num != turn){
+				return;
+			}
+
+			if(checkSameColor()){
+				document.getElementById("message").innerHTML = "The answer does not contain the same color";
+				return;
+			}
+
+			res = checkHitAndBlow();
+
+			document.getElementById("hit_" + new String(turn)).innerHTML = "H " + new String(res[0]);
+			document.getElementById("blow_" + new String(turn)).innerHTML = "B " + new String(res[1]);
+
+			if(res[0] == 4){
+				clear();
+			}
+			else{
+				if(turn == 7){
+					gameOver();
+					return;
+				}
+
+				turn++;
+
+				placeColors(turn);
+
+				document.getElementById("message").innerHTML = "Let's guess the colors";
+			}
+		}
+
+		function checkSameColor(){
+
+			let l = [];
+
+			for(i = 0; i < 4; i ++){
+				if(l.includes(colors[i])){
+					return true;
+				}
+				
+				l[i] = colors[i];
+			}
+
+			return false;
+		}
+
+		function checkHitAndBlow(){
+
+			let res = [0, 0];
+
+			for(i = 0; i < 4; i++){
+				if(colors[i] == answer[i]){
+					res[0]++;
+				}
+				else if(answer.includes(colors[i])){
+					res[1]++;
+				}
+			}
+			return res;
+		}
+
+		function clear() {
+
+			document.getElementById("message").innerHTML = "Clear!!";
+
+			document.getElementById("clearSound").play();
+
+			displayAnswer();
+
+			finish = true;
+		}
+
+		function gameOver() {
+
+			document.getElementById("message").innerHTML = "Game Over";
+
+			document.getElementById("gameOverSound").play();
+
+			displayAnswer();
+
+			finish = true;
+		}
+
+		function displayAnswer(){
+
+			for(i = 0; i < 4; i++){
+				let elm = document.getElementById("answer" + new String(i));
+
+				elm.innerHTML = "";
+				elm.style.background = numToColor(answer[i]);
+			}
+		}
+
+		function onResetButtonClick(){
+
+			document.getElementById("message").innerHTML = "Let's guess the colors";
+
+			document.getElementById("resetButtonClickSound").play();
+
+			for(i = 0; i <= turn; i++){
+				document.getElementById("hit_" + new String(i)).innerHTML = "H  ";
+				document.getElementById("blow_" + new String(i)).innerHTML = "B  ";
+
+				for(j = 0; j < 4; j++){
+					document.getElementById("sc" + new String(i) + '-' + new String(j)).style.background = "#F0F0F0";
+				}
+			}
+
+			for(i = 0; i < 4; i++){
+				let elm = document.getElementById("answer" + new String(i));
+
+				elm.innerHTML = "?";
+				elm.style.background = "#F0F0F0"
+			}
+
+			answer = decideAnswer();
+
+			colors = [0, 1, 2, 3];
+
+			turn = 0;
+
+			finish = false;
+
+			placeColors(turn);
+		}
+	</script>
+</head>
+<body>
+	<h1>Hit and Blow</h1>
+	<div id="message">Let's guess the colors</div>
+	<div class="HBcontainer" id="HBcontainer">
+		<script>
+			let html = '';
+			for(i = 0; i < 8; i++){
+				html += '<div class="verticalContents">\n';
+				html += '<div id="hit_' + new String(i) + '">H  </div>\n';
+				html += '<div id="blow_' + new String(i) + '">B  </div>\n';
+				for(j = 0; j < 4; j++){
+					html += '<button class="color" id="sc' + new String(i) + '-' + new String(j) + '" onclick="onColorButtonClick(this.id)"></button>\n';
+				}
+				html += '<button id="okButton' + new String(i) + '" onclick="onOkButtonClick(this.id)">ok</button>\n';
+				html += '</div>\n'
+			}
+			document.getElementById("HBcontainer").innerHTML = html;
+		</script>
+		<div class="verticalContents">
+			<button class="color" id="answer0">?</button>
+			<button class="color" id="answer1">?</button>
+			<button class="color" id="answer2">?</button>
+			<button class="color" id="answer3">?</button>
+		</div>
+	</div>
+	<a href="#" class="cp_btn" onclick="onResetButtonClick()">reset</a>
+	<audio id="resetButtonClickSound" preload="auto">
+		<source src="se/se_maoudamashii_se_pc01.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_se_pc01.wav" type="audio/wav">
+	</audio>
+	<audio id="clearSound" preload="auto">
+		<source src="se/se_maoudamashii_onepoint09.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_onepoint09.wav" type="audio/wav">
+	</audio>
+	<audio id="gameOverSound" preload="auto">
+		<source src="se/se_maoudamashii_onepoint33.mp3" type="audio/mp3">
+		<source src="se/se_maoudamashii_onepoint33.wav" type="audio/wav">
+	</audio>
+</body>
+</html>
