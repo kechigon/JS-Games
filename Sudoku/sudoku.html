@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link href="sudoku.css" rel="stylesheet">
+    <title>Sudoku</title>
+</head>
+<body>
+    <h1>Sudoku</h1>
+    <div id="message">Let's solve this Sudoku</div>
+    <table cellspacing="1" cellpadding="0">
+		<tbody id="tbody-1">
+			<script>
+				let html = '';
+				for (i = 0; i < 4; i++) {
+					html += '<tr>' + "\n";
+					for (j = 0; j < 4; j++) {
+						let id = 'sudokuCell' + new String(i) + '-' + new String(j);
+						html += '<td id="' + id + '" onclick="onCellClick(this.id)"></td>' + "\n";
+					}
+					html += '</tr>' + "\n";
+				}
+				document.getElementById("tbody-1").innerHTML = html;
+			</script>
+		</tbody>
+    </table>
+	<div class="container">
+		<div class="rowContents">
+			<button class="button" onclick="on1ButtonClick()">1</button>
+			<button class="button" onclick="on2ButtonClick()">2</button>
+			<button class="button" onclick="on3ButtonClick()">3</button>
+			<button class="button" onclick="on4ButtonClick()">4</button>
+		</div>
+	</div>
+	<a href="#" class="cp_btn" onclick="onResetButtonClick()">reset</a>
+	<audio id="resetButtonClickSound" preload="auto">
+		<source src="../se/se_maoudamashii_se_pc01.mp3" type="audio/mp3">
+		<source src="../se/se_maoudamashii_se_pc01.wav" type="audio/wav">
+	</audio>
+	<audio id="clearSound" preload="auto">
+		<source src="../se/se_maoudamashii_onepoint09.mp3" type="audio/mp3">
+		<source src="../se/se_maoudamashii_onepoint09.wav" type="audio/wav">
+	</audio>
+	<script type="text/javascript" src="sudoku.js" ></script>
+</body>
+</html>

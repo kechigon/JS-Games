@@ -1,0 +1,109 @@
+body {
+	background-color: #CCFFFF;
+}
+
+h1 {
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+#message {
+	margin-bottom: 20px;
+	text-align: center;
+	font-size: x-large;
+}
+
+table {
+	margin: 0 auto 0 auto;
+	margin-bottom: 25px;
+	padding: 0;
+	background: #000033;
+	font-size: 22px;
+}
+
+tr {
+	padding: 0;
+	margin: 0;
+}
+
+td {
+	color: #000000;
+	background: #ffffff;
+	padding: 0;
+	margin: 0;
+	width: 75px;
+	height: 75px;
+	text-align: center;
+	vertical-align: middle;
+	caret-color: #cccccc;
+}
+
+#sudokuCell0-0 {
+	border-left: 3px solid #000000;
+	border-top: 3px solid #000000;
+}
+
+#sudokuCell0-1, #sudokuCell0-3{
+	border-top: 3px solid #000000;
+	border-right: 3px solid #000000;
+}
+
+#sudokuCell0-2 {
+	border-top: 3px solid #000000;
+}
+
+#sudokuCell1-0, #sudokuCell3-0{
+	border-bottom: 3px solid #000000;
+	border-left: 3px solid #000000;
+}
+
+#sudokuCell1-1, #sudokuCell1-3, #sudokuCell3-1, #sudokuCell3-3{
+	border-right: 3px solid #000000;
+	border-bottom: 3px solid #000000;
+}
+
+#sudokuCell1-2, #sudokuCell3-2 {
+	border-bottom: 3px solid #000000;
+}
+
+#sudokuCell2-0 {
+	border-left: 3px solid #000000;
+}
+
+#sudokuCell2-1, #sudokuCell2-3{
+	border-right: 3px solid #000000;
+}
+
+.rowContents {
+	display: flex;
+	justify-content: space-around;
+	width: 350px;
+	margin: 0 auto 0 auto;
+	margin-bottom: 20px;
+}
+
+.button {
+	width: 50px;
+	height: 50px;
+}
+
+a.cp_btn {
+	display: block;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 160px;
+	padding: 0.8em;
+	text-align: center;
+	text-decoration: none;
+	color: #FFF;
+	background: #26C6DA;
+	border-bottom: 2px solid #00838F;
+	border-radius: 4px;
+	box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 2px 2px rgba(0, 0, 0, 0.19);
+}
+
+a.cp_btn:active {
+	border-bottom: 2px solid #26C6DA;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.30);
+}
